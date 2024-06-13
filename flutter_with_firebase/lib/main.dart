@@ -70,6 +70,14 @@ class _HomeState extends State<Home> {
               child: Text('Create'),
           
             ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Print_button();
+              },
+              child: Text('Print users'),
+          
+            ),
           ],
         ),
       ),
@@ -98,7 +106,15 @@ class _HomeState extends State<Home> {
       .catchError((e) => print("Failed to add user $e"));
 
   }
-
+  void Print_button() async{
+    CollectionReference userRegistration_collection = FirebaseFirestore.instance.collection("UserRegistration");
+    QuerySnapshot querySnapshot = await userRegistration_collection.get();
+    
+    for(QueryDocumentSnapshot doc in querySnapshot.docs)
+    {
+      print(doc.data());
+    }
+  }
 
    @override
   void dispose() {
