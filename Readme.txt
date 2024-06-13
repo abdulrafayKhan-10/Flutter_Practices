@@ -1,0 +1,1 @@
+This Repository is for Flutter Practices, some folders with aptech name are APTECH institute Assignments.
