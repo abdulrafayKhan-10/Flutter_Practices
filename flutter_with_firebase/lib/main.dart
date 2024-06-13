@@ -31,6 +31,10 @@ class _HomeState extends State<Home> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  //list to hold every user data
+  List<Map<String, dynamic>> users = [];
+
   @override
   Widget build(BuildContext context) {
      return Scaffold(
@@ -73,10 +77,21 @@ class _HomeState extends State<Home> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Print_button();
+                fetch_users();
               },
-              child: Text('Print users'),
+              child: Text('Fetch users'),
           
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(users[index]['username']),
+                    subtitle: Text(users[index]['useremail']),
+                  );
+                },
+              ), 
             ),
           ],
         ),
@@ -100,20 +115,25 @@ class _HomeState extends State<Home> {
         lastNameController.clear();
         emailController.clear();
         passwordController.clear();
-        
+        fetch_users();
       })
       // ignore: invalid_return_type_for_catch_error
       .catchError((e) => print("Failed to add user $e"));
 
   }
-  void Print_button() async{
+  void fetch_users() async{
     CollectionReference userRegistration_collection = FirebaseFirestore.instance.collection("UserRegistration");
     QuerySnapshot querySnapshot = await userRegistration_collection.get();
     
+    users.clear();
+
+
     for(QueryDocumentSnapshot doc in querySnapshot.docs)
     {
-      print(doc.data());
+      users.add(doc.data() as Map<String, dynamic>);
     }
+
+        setState(() {});
   }
 
    @override
